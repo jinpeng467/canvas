@@ -8,18 +8,18 @@ define(['jquery'], function($){
 			canvas.width = 800;
 			canvas.height = 800;
 			var context=canvas.getContext("2d");
-			
-			context.beginPath();
-			context.rect(100, 100, 300, 200);
+			this.drawRect(context, {x:200, y: 200, fillcolor: 'rgba(0, 256, 0, 0.5)'});
+			// context.beginPath();
+			// context.rect(100, 100, 300, 200);
 			// context.moveTo(100, 100);
 			// context.lineTo(100, 700);
 			// context.lineTo(700, 700);
 			// context.lineWidth = 10;
-			context.closePath();
-			context.strokeStyle = '#058';
-			context.fillStyle = 'yellow';
-			context.fill();
-			context.stroke();
+			// context.closePath();
+			// context.strokeStyle = '#058';
+			// context.fillStyle = 'yellow';
+			// context.fill();
+			// context.stroke();
 			/**
 			var canvas=document.getElementById("path");  //读取canvas元素的id
 			canvas.width = '168';
@@ -34,25 +34,54 @@ define(['jquery'], function($){
 			// canvas.click(function(){alert(13)});
 			**/
 		};
-
-		this.drawReact = function(cfx, reactOption) {
+		//矩形绘制
+		this.drawRect = function(cfx, reactOption) {
 			var option = {
-				x : '',
-				y : '',
-				width : '',
-				height : '',
-				bordercolor : '',
-				fillcolor : ''
+				x : 100,
+				y : 100,
+				width : 300,
+				height : 200,
+				bordercolor : '#058',
+				fillcolor : 'yellow',
+				borderwidth : null
 			};
-			option = $.extend(option, reactOption);
+			option = $.extend({}, option, reactOption);
+			cfx.fillStyle = option.fillcolor;
+			cfx.fillRect(option.x, option.y, option.width, option.height);
+			//console.log(option);	
+			//cfx.beginPath();
+			//cfx.rect(option.x, option.y, option.width, option.height);
+			//cfx.closePath();
+			//cfx.linewidth = 10;
+			//cfx.fillStyle = option.fillcolor;
+			//cfx.strokeStyle = option.bordercolor;
+			//cfx.fill();
+			//cfx.stroke();
 
-			cfx.beginPath();
-			cfx.react(option.x, option.y, option.width, option.height);
-			cfx.closePath();
 
 		};
 
-		this.drawLine = function() {
+		this.drawLine = function(cfx, reactOption) {
+			var option = {
+				x: 100,
+				y: 100,
+				width : '',
+				height : '',
+
+			};
+		};
+		this.drawText = function(cfx, textOption) {
+			var option = {
+				fontstyle: '',
+				fontvariant : '',
+				fontweight : '',
+				fontsize : '',
+				fontfamily : '' 
+			};
+			option = $.extend({}, option, textOption);
+			//font.
+
+
 
 		};
 

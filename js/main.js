@@ -7,7 +7,7 @@
  	}
  });
 require(['canvas'], function(canvas){
-	canvas.draw();
+	canvas.render();
 
 	//console.log(a);
 	//console.log(new a());

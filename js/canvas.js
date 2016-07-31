@@ -9,6 +9,8 @@ define(['jquery'], function($){
 		this.context = '';
 		this.x = '';
 		this.y = '';
+		this.bordercolor = '#058';
+		this.fillcolor = '#9fccff';
 		//入口机制
 		this.render = function() {
 			var self = this;
@@ -45,45 +47,46 @@ define(['jquery'], function($){
 		};
 		this.draw = function(p) {
 
-			this.context.clearRect(0, 0, this.context.width, this.context.height);
-			var option = {x:30, y: 380, fillcolor: '#9fccff', title: '搜索页'};
-			this.drawImageRect(option, p);
-			// var option = {x:30, y: 380, fillcolor: '#9fccff', title: '搜索页'}; 
-			// this.drawRect(option);
-			// var smallOption = {x:218, y:430, width:10, height:18, fillcolor: '#9fccff'};
-			// this.drawRect(smallOption);
-			//var canvas=document.getElementById("path");
-			//canvas.width = 800;
-			//canvas.height = 800;
-			//var context = canvas.getContext("2d");
-			//this.drawRect(context, {x:200, y: 200, fillcolor: 'rgba(0, 256, 0, 0.5)'});
-			// context.beginPath();
-			// context.rect(100, 100, 300, 200);
-			// context.moveTo(100, 100);
-			// context.lineTo(100, 700);
-			// context.lineTo(700, 700);
-			// context.lineWidth = 10;
-			// context.closePath();
-			// context.strokeStyle = '#058';
-			// context.fillStyle = 'yellow';
-			// context.fill();
-			// context.stroke();
-			/**
-			var canvas=document.getElementById("path");  //读取canvas元素的id
-			canvas.width = '168';
-			canvas.height = '121';
-			var context=canvas.getContext("2d");
-			this.render(context);
-			// context.fillStyle="#FF0000";  //填充的颜色
-			// context.strokeStyle="000";  //边框颜色
-			// context.linewidth=10;  //边框宽
-			// context.fillRect(0,0,400,400);  //填充颜色 x y坐标 宽 高
-			// context.strokeRect(0,0,400,400);  //填充边框 x y坐标 宽 高
-			// canvas.click(function(){alert(13)});
-			**/
-		};
-		this.drawImageRect = function(opt, p){
 			var self = this;
+			this.context.clearRect(0, 0, this.context.width, this.context.height);
+			var reactWidth = 188;
+			var reactHeight = 113;
+			var option = {
+				x:30, 
+				y: 380, 
+				width : reactWidth,
+				height : reactHeight,
+				fillcolor: '#9fccff', 
+				title: '搜索页'
+			};
+			var imageFunction = function(image, option) {
+				self.context.beginPath();
+				self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
+			 	if (option.title !== null) {
+			 		var titleX = option.x + (option.width)/2 - 20;
+			 		var titleY = option.y + 20;
+			 		var titleOption = {
+			 			x : titleX,
+			 			y : titleY,
+			 			text : option.title
+			 		};
+			 		self.fillText(titleOption, p);
+			 		var trianglePointX = 30 + (reactWidth / 2);
+				 	var triangleOption = {
+						point1 : {x : trianglePointX, y : 380 + 30},
+				 		point2 : {x : trianglePointX - 10, y : 380 + 40},
+						point3 : {x : trianglePointX + 10, y : 380 + 40},
+				 	};
+				 	self.drawTriangle(triangleOption);
+			 	}	
+			 	self.context.closePath();
+			};
+			
+			this.drawImageRect(option, p, imageFunction);
+		};
+		this.drawImageRect = function(opt, p, onloadFunction){
+			var self = this;
+
 			var option = {
 				x : 100,
 				y : 100,
@@ -91,29 +94,44 @@ define(['jquery'], function($){
 				height : 113,
 				fillcolor : '',
 				borderwidth : null,
-				title : null
+				title : null,
 			};
 			option = $.extend({}, option, opt);
 			this.context.beginPath();
 			var image = new Image();
 			image.src = './image/custom_flow.png';
-			image.onload = function(){
-				self.context.beginPath();
-				self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
-				if (option.title !== null) {
-					var titleX = option.x + (option.width)/2 - 20;
-					var titleY = option.y + 20;
-					var titleOption = {
-						x : titleX,
-						y : titleY,
-						text : option.title
-					};
-					self.fillText(titleOption, p);
-				}	
-				self.context.closePath();
+			//if (onloadFunction !== null) {
+			image.onload = function() {
+				onloadFunction(image, option)
 			};
-			//console.log(self.context.isPointInPath(p.x, p.y))
+			//}
+
+			// image.onload = function(){
+			// 	self.context.beginPath();
+			// 	self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
+			// 	if (option.title !== null) {
+			// 		var titleX = option.x + (option.width)/2 - 20;
+			// 		var titleY = option.y + 20;
+			// 		var titleOption = {
+			// 			x : titleX,
+			// 			y : titleY,
+			// 			text : option.title
+			// 		};
+			// 		self.fillText(titleOption, p);
+			// 	}	
+			// 	self.context.closePath();
+			// 	var trianglePointX = 30 + (reactWidth / 2);
+			// 	var triangleOption = {
+			// 		point1 : {x : trianglePointX, y : 380 + 20},
+			// 		point2 : {x : trianglePointX - 10, y : 380 + 30},
+			// 		point3 : {x : trianglePointX + 10, y : 380 + 30}
+			// 	};
+			// 	self.drawTriangle(triangleOption);
+			// };
+			
 			this.context.closePath();
+			//console.log(self.context.isPointInPath(p.x, p.y))
+
 			//console.log(image);
 			//if (image.complete) {
 			//	this.context.drawImage(image, 20, 20);
@@ -135,7 +153,7 @@ define(['jquery'], function($){
 			this.context.font = option.font;
 			this.context.fillText(option.text, option.x, option.y);
 			textWidth = this.context.measureText(option.text).height;
-			console.log(textWidth);
+			//console.log(textWidth);
 			// if (p && this.context.isPointInPath(p.x, p.y)) {
 			// 	console.log(1232);
 			// }
@@ -147,13 +165,14 @@ define(['jquery'], function($){
 
 		//矩形绘制
 		this.drawRect = function(reactOption) {
+			var self = this;
 			this.context.beginPath();
 			var option = {
 				x : 100,
 				y : 100,
 				width : 188,
 				height : 113,
-				bordercolor : '#058',
+				bordercolor : this.bordercolor,
 				fillcolor : '#9fccff',
 				borderwidth : null,
 				title: null
@@ -176,6 +195,26 @@ define(['jquery'], function($){
 			//cfx.strokeStyle = option.bordercolor;
 			//cfx.fill();
 			//cfx.stroke();
+		};
+		//绘制三角形
+		this.drawTriangle = function(triangleOption) {
+			var option = {
+				point1 : {x : '', y : ''},
+				point2 : {x : '', y : ''},
+				point3 : {x : '', y : ''},
+				color :  '#fff',//this.bordercolor
+				fillcolor : '#fff'
+			};
+			option = $.extend({}, option, triangleOption);
+			this.context.beginPath();
+			this.context.moveTo(option.point1.x, option.point1.y);
+			this.context.lineTo(option.point2.x, option.point2.y);
+			this.context.lineTo(option.point3.x, option.point3.y);
+			this.context.closePath();
+			//this.context.strokeStyle = option.color;
+			this.context.fillStyle = option.fillcolor;
+
+			this.context.fill();
 		};
 		this.drawLine = function(cfx, reactOption) {
 			var option = {

@@ -20,8 +20,6 @@ define(['jquery'], function($){
 			this.context = canvas.getContext("2d");
 			canvas.addEventListener('click', function(e){
 				p = self.detect(e, canvas);
-				//draw(p);
-				//alert(1213);
 				self.draw(p);
 			});
 			self.draw();
@@ -33,20 +31,9 @@ define(['jquery'], function($){
 			var clientY = ev.clientY;
 			x = clientX - canvas.getBoundingClientRect().left;
 			y = clientY - canvas.getBoundingClientRect().top;
-			//console.log(x, y);
-			// if (ev.layerX || ev.layerX == 0) {
-			// 	x = ev.layerX;
-			// 	y = ev.layerY;
-			// } else if (ev.offsetX || ev.offsetX == 0) { // Opera
-			// 	x = ev.offsetX;
-			// 	y = ev.offsetY;
-			// }
-			// this.x = x;
-			// this.y = y;
 			return {x : x, y : y};
 		};
 		this.draw = function(p) {
-
 			var self = this;
 			this.context.clearRect(0, 0, this.context.width, this.context.height);
 			var reactWidth = 188;
@@ -59,7 +46,6 @@ define(['jquery'], function($){
 				fillcolor: '#9fccff', 
 				title: '搜索页'
 			};
-			//图形回调函数封装
 			var imageFunction = function(image, option) {
 				self.context.beginPath();
 				self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
@@ -84,10 +70,17 @@ define(['jquery'], function($){
 			};
 			
 			this.drawImageRect(option, p, imageFunction);
+			var reactOption = {
+				title : '测试标题',
+				height : 80,
+				width : 150
+			};
+			this.drawRect(reactOption);
+
+
 		};
 		this.drawImageRect = function(opt, p, onloadFunction){
 			var self = this;
-
 			var option = {
 				x : 100,
 				y : 100,
@@ -101,7 +94,6 @@ define(['jquery'], function($){
 			this.context.beginPath();
 			var image = new Image();
 			image.src = './image/custom_flow.png';
-			//if (onloadFunction !== null) {
 			image.onload = function() {
 				onloadFunction(image, option)
 			};
@@ -116,7 +108,9 @@ define(['jquery'], function($){
 				fillcolor : '#fff',
 				font : '16px Courier New'
 			};
+
 			option = $.extend({}, option, opt);
+			//console.log(option);
 			this.context.fillStyle = option.fillcolor;
 			this.context.font = option.font;
 			this.context.fillText(option.text, option.x, option.y);
@@ -124,7 +118,7 @@ define(['jquery'], function($){
 			this.context.closePath();
 		};
 
-		//矩形绘制
+		//绘制矩形
 		this.drawRect = function(reactOption, p, callback) {
 			var self = this;
 			this.context.beginPath();
@@ -147,9 +141,14 @@ define(['jquery'], function($){
 			}
 			
 			if (option.title !== null) {
-				this.context.fillStyle = '#fff';
-				this.context.font = '16px Courier New';
-				this.context.fillText(option.title, option.x + (option.width)/2 - 16, option.y + 20);
+				var textOptionX = option.x + (option.width)/2 - 30;
+				var textOPtionY = option.y + 20;
+				var textOption = {
+					x : textOptionX,
+					y : textOPtionY,
+					text : option.title
+				};
+				this.fillText(textOption);
 			}
 			this.context.closePath();
 		};
@@ -168,7 +167,6 @@ define(['jquery'], function($){
 			this.context.lineTo(option.point2.x, option.point2.y);
 			this.context.lineTo(option.point3.x, option.point3.y);
 			this.context.closePath();
-			//this.context.strokeStyle = option.color;
 			this.context.fillStyle = option.fillcolor;
 			if (p && callBack && this.context.isPointInPath(p.x, p.y)) {
 				callBack();
@@ -194,7 +192,7 @@ define(['jquery'], function($){
 				fontfamily : '' 
 			};
 			option = $.extend({}, option, textOption);
-			//fon
+		
 		};
 
 	}

@@ -59,6 +59,7 @@ define(['jquery'], function($){
 				fillcolor: '#9fccff', 
 				title: '搜索页'
 			};
+			//图形回调函数封装
 			var imageFunction = function(image, option) {
 				self.context.beginPath();
 				self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
@@ -77,7 +78,7 @@ define(['jquery'], function($){
 				 		point2 : {x : trianglePointX - 10, y : 380 + 40},
 						point3 : {x : trianglePointX + 10, y : 380 + 40},
 				 	};
-				 	self.drawTriangle(triangleOption);
+				 	self.drawTriangle(triangleOption, p);
 			 	}	
 			 	self.context.closePath();
 			};
@@ -104,39 +105,7 @@ define(['jquery'], function($){
 			image.onload = function() {
 				onloadFunction(image, option)
 			};
-			//}
-
-			// image.onload = function(){
-			// 	self.context.beginPath();
-			// 	self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
-			// 	if (option.title !== null) {
-			// 		var titleX = option.x + (option.width)/2 - 20;
-			// 		var titleY = option.y + 20;
-			// 		var titleOption = {
-			// 			x : titleX,
-			// 			y : titleY,
-			// 			text : option.title
-			// 		};
-			// 		self.fillText(titleOption, p);
-			// 	}	
-			// 	self.context.closePath();
-			// 	var trianglePointX = 30 + (reactWidth / 2);
-			// 	var triangleOption = {
-			// 		point1 : {x : trianglePointX, y : 380 + 20},
-			// 		point2 : {x : trianglePointX - 10, y : 380 + 30},
-			// 		point3 : {x : trianglePointX + 10, y : 380 + 30}
-			// 	};
-			// 	self.drawTriangle(triangleOption);
-			// };
-			
 			this.context.closePath();
-			//console.log(self.context.isPointInPath(p.x, p.y))
-
-			//console.log(image);
-			//if (image.complete) {
-			//	this.context.drawImage(image, 20, 20);
-			//}
-			//this.context.closePath();
 		};
 		this.fillText= function(opt, p) {
 			this.context.beginPath();
@@ -147,24 +116,16 @@ define(['jquery'], function($){
 				fillcolor : '#fff',
 				font : '16px Courier New'
 			};
-
 			option = $.extend({}, option, opt);
 			this.context.fillStyle = option.fillcolor;
 			this.context.font = option.font;
 			this.context.fillText(option.text, option.x, option.y);
 			textWidth = this.context.measureText(option.text).height;
-			//console.log(textWidth);
-			// if (p && this.context.isPointInPath(p.x, p.y)) {
-			// 	console.log(1232);
-			// }
-			// this.context.addEventListener('click',function(){
-			// 	alert(213);
-			// })
 			this.context.closePath();
 		};
 
 		//矩形绘制
-		this.drawRect = function(reactOption) {
+		this.drawRect = function(reactOption, p, callback) {
 			var self = this;
 			this.context.beginPath();
 			var option = {
@@ -173,31 +134,27 @@ define(['jquery'], function($){
 				width : 188,
 				height : 113,
 				bordercolor : this.bordercolor,
-				fillcolor : '#9fccff',
+				fillcolor : '#9fccfe',
 				borderwidth : null,
 				title: null
 			};
 			option = $.extend({}, option, reactOption);
 			this.context.fillStyle = option.fillcolor;
 			this.context.fillRect(option.x, option.y, option.width, option.height);
+			
+			if (p && callback && this.context.isPointInPath(p.x, p.y)) {
+				callback();		
+			}
+			
 			if (option.title !== null) {
 				this.context.fillStyle = '#fff';
 				this.context.font = '16px Courier New';
 				this.context.fillText(option.title, option.x + (option.width)/2 - 16, option.y + 20);
 			}
 			this.context.closePath();
-			//console.log(option);	
-			//cfx.beginPath();
-			//cfx.rect(option.x, option.y, option.width, option.height);
-			//cfx.closePath();
-			//cfx.linewidth = 10;
-			//cfx.fillStyle = option.fillcolor;
-			//cfx.strokeStyle = option.bordercolor;
-			//cfx.fill();
-			//cfx.stroke();
 		};
 		//绘制三角形
-		this.drawTriangle = function(triangleOption) {
+		this.drawTriangle = function(triangleOption, p, callBack) {
 			var option = {
 				point1 : {x : '', y : ''},
 				point2 : {x : '', y : ''},
@@ -213,7 +170,10 @@ define(['jquery'], function($){
 			this.context.closePath();
 			//this.context.strokeStyle = option.color;
 			this.context.fillStyle = option.fillcolor;
-
+			if (p && callBack && this.context.isPointInPath(p.x, p.y)) {
+				callBack();
+				//console.log(this.context.isPointInPath(p.x, p.y));
+			}
 			this.context.fill();
 		};
 		this.drawLine = function(cfx, reactOption) {
@@ -236,16 +196,6 @@ define(['jquery'], function($){
 			option = $.extend({}, option, textOption);
 			//fon
 		};
-		/**
-		this.render = function(cxt) {
-			cxt.clearReact(0, 0, width, height);
-			cxt.fillStyle = 'rgb(0, 102, 153)';
-			cxt.begainPath();
-			cxt.arc();
-			cxt.closePath();
-			cxt.fill(); 
-		};**/
-
 
 	}
 

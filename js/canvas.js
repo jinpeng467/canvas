@@ -75,7 +75,7 @@ define(['jquery'], function($){
 				height : 80,
 				width : 150
 			};
-			this.drawRect(reactOption);
+			this.drawRect(reactOption, p);
 
 
 		};
@@ -134,12 +134,16 @@ define(['jquery'], function($){
 			};
 			option = $.extend({}, option, reactOption);
 			this.context.fillStyle = option.fillcolor;
+
+			//由于fillRect不具有isPointInPath的方法， 特此添加rect()函数
+			this.context.rect(option.x, option.y, option.width, option.height);
 			this.context.fillRect(option.x, option.y, option.width, option.height);
-			
-			if (p && callback && this.context.isPointInPath(p.x, p.y)) {
+			if (p && callback &&this.context.isPointInPath(p.x, p.y)) {
+				//console.log(13);
 				callback();		
 			}
 			
+			this.context.closePath();
 			if (option.title !== null) {
 				var textOptionX = option.x + (option.width)/2 - 30;
 				var textOPtionY = option.y + 20;
@@ -150,14 +154,14 @@ define(['jquery'], function($){
 				};
 				this.fillText(textOption);
 			}
-			this.context.closePath();
+			
 		};
 		//绘制三角形
 		this.drawTriangle = function(triangleOption, p, callBack) {
 			var option = {
-				point1 : {x : '', y : ''},
-				point2 : {x : '', y : ''},
-				point3 : {x : '', y : ''},
+				point1 : {x : null, y : null},
+				point2 : {x : null, y : null},
+				point3 : {x : null, y : null},
 				color :  '#fff',//this.bordercolor
 				fillcolor : '#fff'
 			};
@@ -169,6 +173,7 @@ define(['jquery'], function($){
 			this.context.closePath();
 			this.context.fillStyle = option.fillcolor;
 			if (p && callBack && this.context.isPointInPath(p.x, p.y)) {
+
 				callBack();
 				//console.log(this.context.isPointInPath(p.x, p.y));
 			}

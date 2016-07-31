@@ -76,8 +76,6 @@ define(['jquery'], function($){
 				width : 150
 			};
 			this.drawRect(reactOption, p);
-
-
 		};
 		this.drawImageRect = function(opt, p, onloadFunction){
 			var self = this;
@@ -139,7 +137,6 @@ define(['jquery'], function($){
 			this.context.rect(option.x, option.y, option.width, option.height);
 			this.context.fillRect(option.x, option.y, option.width, option.height);
 			if (p && callback &&this.context.isPointInPath(p.x, p.y)) {
-				//console.log(13);
 				callback();		
 			}
 			

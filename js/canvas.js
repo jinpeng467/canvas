@@ -39,32 +39,45 @@ define(['jquery'], function($){
 			var reactWidth = 188;
 			var reactHeight = 113;
 			var option = {
-				x:30, 
-				y: 380, 
+				x : 30, 
+				y : 380, 
 				width : reactWidth,
 				height : reactHeight,
-				fillcolor: '#9fccff', 
-				title: '搜索页'
+				fillcolor : '#9fccff', 
+				title : '搜索页'
 			};
 			var imageFunction = function(image, option) {
 				self.context.beginPath();
 				self.context.drawImage(image, 0, 31, option.width, option.height, option.x, option.y, option.width, option.height);
+			 	
 			 	if (option.title !== null) {
 			 		var titleX = option.x + (option.width)/2 - 20;
-			 		var titleY = option.y + 20;
+			 		var titleY = option.y + 10;
 			 		var titleOption = {
 			 			x : titleX,
 			 			y : titleY,
 			 			text : option.title
 			 		};
-			 		self.fillText(titleOption, p);
-			 		var trianglePointX = 30 + (reactWidth / 2);
-				 	var triangleOption = {
-						point1 : {x : trianglePointX, y : 380 + 30},
-				 		point2 : {x : trianglePointX - 10, y : 380 + 40},
-						point3 : {x : trianglePointX + 10, y : 380 + 40},
-				 	};
-				 	self.drawTriangle(triangleOption, p);
+			 		
+			 		var option = {
+						text : '搜索页',
+						textLeft : titleOption.x,
+						textTop : titleOption.y,
+						tplLeft : option.x,
+						tplTop : option.y + 40,
+						reactWidth : reactWidth
+					};
+					self.renderHtmlText(option, p);
+			 		//self.renderHtmlText('搜索页', titleOption.x, titleOption.y, option.x, option.y + 40);
+			 		/**
+			 			var trianglePointX = 30 + (reactWidth / 2);
+				 		var triangleOption = {
+							point1 : {x : trianglePointX, y : option.y + 30},
+				 			point2 : {x : trianglePointX - 10, y : option.y + 40},
+							point3 : {x : trianglePointX + 10, y : option + 40},
+				 		};
+				 		self.drawTriangle(triangleOption, p);
+				 	**/
 			 	}	
 			 	self.context.closePath();
 			};
@@ -108,7 +121,6 @@ define(['jquery'], function($){
 			};
 
 			option = $.extend({}, option, opt);
-			//console.log(option);
 			this.context.fillStyle = option.fillcolor;
 			this.context.font = option.font;
 			this.context.fillText(option.text, option.x, option.y);
@@ -136,11 +148,11 @@ define(['jquery'], function($){
 			//由于fillRect不具有isPointInPath的方法， 特此添加rect()函数
 			this.context.rect(option.x, option.y, option.width, option.height);
 			this.context.fillRect(option.x, option.y, option.width, option.height);
-			if (p && callback &&this.context.isPointInPath(p.x, p.y)) {
+			if (p && callback && this.context.isPointInPath(p.x, p.y)) {
 				callback();		
 			}
-			
 			this.context.closePath();
+			
 			if (option.title !== null) {
 				var textOptionX = option.x + (option.width)/2 - 30;
 				var textOPtionY = option.y + 20;
@@ -150,8 +162,7 @@ define(['jquery'], function($){
 					text : option.title
 				};
 				this.fillText(textOption);
-			}
-			
+			}			
 		};
 		//绘制三角形
 		this.drawTriangle = function(triangleOption, p, callBack) {
@@ -194,8 +205,71 @@ define(['jquery'], function($){
 				fontfamily : '' 
 			};
 			option = $.extend({}, option, textOption);
-		
 		};
+		//渲染html格式的文字,
+		//并增加监听的事件位置
+		this.renderHtmlText = function(option, p) {
+			var self = this,
+				defaultOption = {
+					text : null,
+					textLeft : null,
+					textTop : null,
+					tplLeft : null,
+					tplTop : null,
+					reactWidth : null
+			};
+			option = $.extend({}, defaultOption, option);
+			var html = '<a href="javascript: void(0);" id ="html_text" style="position : absolute; left : ' + option.textLeft + 'px; top : ' + option.textTop + 'px; color: #fff" >' + option.text + '</a>';
+			$('#react-title').html(html);
+			$("#html_text").on('click', function(){
+				var nowStatus = $("#list-select").css('display');
+				if (nowStatus === 'none') {
+					var trianglePointX = 20 + (option.reactWidth / 2);
+					var triangleOption = {
+						point1 : {x : trianglePointX, y : option.textTop + 10},
+						point2 : {x : trianglePointX - 10, y : option.textTop + 30},
+						point3 : {x : trianglePointX + 10, y : option.textTop + 30},
+					};
+				 	self.drawTriangle(triangleOption, p);
+					$("#list-select").css('display', 'block');
+					self.renderHtmlTpl(option.tplLeft, option.tplTop);
+					return;	
+				}
+				self.draw(p);
+				$("#list-select").css("display", 'none');
+			});
+		};
+
+		//面板渲染
+		this.renderHtmlTpl = function(left, top){
+
+			var html = '<div style="position:relative">';
+			html += '<ul>';
+			html += '<li><a title="搜索页" data="">搜索页</a></li>';
+			html += '<li><a title="在线词条页" data="">在线词条页</a></li>';
+			html += '<li><a title="2.0首页精彩推荐">2.0首页精彩推荐</a></li>';
+			html += '<li><a title="2.0搜索结果页">2.0搜索结果页</a></li>';
+			html += '<li><a title="目录页">目录页</a></li>';
+			html += '<li><a title="图片页">图片页</a></li>';
+			html += '<li><a title= "我的百科页">我的百科页</a></li>';
+			html += '<li><a title="在线词条页" data="">在线词条页</a></li>';
+			html += '<li><a title="2.0首页精彩推荐">2.0首页精彩推荐</a></li>';
+			html += '<li><a title="2.0搜索结果页">2.0搜索结果页</a></li>';
+			html += '<li><a title="目录页">目录页</a></li>';
+			html += '<li><a title="图片页">图片页</a></li>';
+			html += '<li><a title= "我的百科页">我的百科页</a></li>';
+			html += '<li><a title="在线词条页" data="">在线词条页</a></li>';
+			html += '<li><a title="2.0首页精彩推荐">2.0首页精彩推荐</a></li>';
+			html += '<li><a title="2.0搜索结果页">2.0搜索结果页</a></li>';
+			html += '<li><a title="目录页">目录页</a></li>';
+			html += '<li><a title="图片页">图片页</a></li>';
+			html += '<li><a title= "我的百科页">我的百科页</a></li>';
+			html += '</ul>';
+			html += '</div>';
+			//console.log(top, left);
+			$("#list-select").css({top : top, left: left});
+			$("#list-select").html(html);
+		}
 
 	}
 

@@ -68,20 +68,9 @@ define(['jquery'], function($){
 						reactWidth : reactWidth
 					};
 					self.renderHtmlText(option, p);
-			 		//self.renderHtmlText('搜索页', titleOption.x, titleOption.y, option.x, option.y + 40);
-			 		/**
-			 			var trianglePointX = 30 + (reactWidth / 2);
-				 		var triangleOption = {
-							point1 : {x : trianglePointX, y : option.y + 30},
-				 			point2 : {x : trianglePointX - 10, y : option.y + 40},
-							point3 : {x : trianglePointX + 10, y : option + 40},
-				 		};
-				 		self.drawTriangle(triangleOption, p);
-				 	**/
 			 	}	
 			 	self.context.closePath();
 			};
-			
 			this.drawImageRect(option, p, imageFunction);
 			var reactOption = {
 				title : '测试标题',

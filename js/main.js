@@ -6,10 +6,7 @@
  		"jquery" : "http://s.thsi.cn/js/jquery-1.7.2.min"
  	}
  });
-require(['canvas'], function(canvas){
+require(['canvas', 'jquery'], function(canvas, $){
 	canvas.render();
-
-	//console.log(a);
-	//console.log(new a());
 
 });

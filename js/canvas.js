@@ -1,6 +1,6 @@
 //canvas 业务类
 //绘制图形模块
-define(['jquery'], function($){
+define([], function(){
 
 	var Canvas  = function() {
 		this.radius = 8;
@@ -24,7 +24,6 @@ define(['jquery'], function($){
 			});
 			self.draw();
 		};
-
 		this.detect = function(ev, canvas) {
 			var x, y;
 			var clientX = ev.clientX;
@@ -39,8 +38,8 @@ define(['jquery'], function($){
 			var reactWidth = 188;
 			var reactHeight = 113;
 			var option = {
-				x : 30, 
-				y : 380, 
+				x : 30,
+				y : 380,
 				width : reactWidth,
 				height : reactHeight,
 				fillcolor : '#9fccff', 
@@ -116,7 +115,6 @@ define(['jquery'], function($){
 			textWidth = this.context.measureText(option.text).height;
 			this.context.closePath();
 		};
-
 		//绘制矩形
 		this.drawRect = function(reactOption, p, callback) {
 			var self = this;
@@ -133,7 +131,6 @@ define(['jquery'], function($){
 			};
 			option = $.extend({}, option, reactOption);
 			this.context.fillStyle = option.fillcolor;
-
 			//由于fillRect不具有isPointInPath的方法， 特此添加rect()函数
 			this.context.rect(option.x, option.y, option.width, option.height);
 			this.context.fillRect(option.x, option.y, option.width, option.height);
@@ -170,31 +167,11 @@ define(['jquery'], function($){
 			this.context.closePath();
 			this.context.fillStyle = option.fillcolor;
 			if (p && callBack && this.context.isPointInPath(p.x, p.y)) {
-
 				callBack();
-				//console.log(this.context.isPointInPath(p.x, p.y));
 			}
 			this.context.fill();
 		};
-		this.drawLine = function(cfx, reactOption) {
-			var option = {
-				x: 100,
-				y: 100,
-				width : '',
-				height : '',
 
-			};
-		};
-		this.drawText = function(cfx, textOption) {
-			var option = {
-				fontstyle: '',
-				fontvariant : '',
-				fontweight : '',
-				fontsize : '',
-				fontfamily : '' 
-			};
-			option = $.extend({}, option, textOption);
-		};
 		//渲染html格式的文字,
 		//并增加监听的事件位置
 		this.renderHtmlText = function(option, p) {
@@ -206,26 +183,37 @@ define(['jquery'], function($){
 					tplLeft : null,
 					tplTop : null,
 					reactWidth : null
-			};
+				};
 			option = $.extend({}, defaultOption, option);
 			var html = '<a href="javascript: void(0);" id ="html_text" style="position : absolute; left : ' + option.textLeft + 'px; top : ' + option.textTop + 'px; color: #fff" >' + option.text + '</a>';
 			$('#react-title').html(html);
-			$("#html_text").on('click', function(){
-				var nowStatus = $("#list-select").css('display');
+			var $listSelect = $("#list-select");
+			$("#html_text").on('click', function() {
+				var nowStatus = $listSelect.css('display');
 				if (nowStatus === 'none') {
 					var trianglePointX = 20 + (option.reactWidth / 2);
 					var triangleOption = {
-						point1 : {x : trianglePointX, y : option.textTop + 10},
+						point1 : {x : trianglePointX, y : option.textTop + 20},
 						point2 : {x : trianglePointX - 10, y : option.textTop + 30},
 						point3 : {x : trianglePointX + 10, y : option.textTop + 30},
 					};
 				 	self.drawTriangle(triangleOption, p);
-					$("#list-select").css('display', 'block');
+					$listSelect.css('display', 'block');
 					self.renderHtmlTpl(option.tplLeft, option.tplTop);
 					return;	
 				}
 				self.draw(p);
-				$("#list-select").css("display", 'none');
+				$listSelect.css("display", 'none');
+			});
+
+			$("body").on('click', function(e){
+				e = e || window.event;
+				var obj = $(e.srcElement || e.target);
+				if ($(obj).is("#html_text,#list-select") || $(obj).parents().is("#list-select")) {
+					return;
+				} 
+				self.draw(p);
+				$listSelect.css("display", 'none');
 			});
 		};
 
@@ -255,11 +243,13 @@ define(['jquery'], function($){
 			html += '<li><a title= "我的百科页">我的百科页</a></li>';
 			html += '</ul>';
 			html += '</div>';
-			//console.log(top, left);
 			$("#list-select").css({top : top, left: left});
 			$("#list-select").html(html);
-		}
+		},
+		renderText : function() {
+			var txt = '';
 
+		}
 	}
 
 	return new Canvas();
